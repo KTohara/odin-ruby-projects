@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-require 'byebug'
-
+# Tic-Tac-Toe Board
 class Board
   def initialize(num)
     @grid = Array.new(num) { [''] * num }
@@ -17,8 +16,8 @@ class Board
 
   def grid_to_display
     num_total_length = (@grid_spaces**2).digits.count
-    @grid.each do |row|
-      row.map! do |cell|
+    @grid.map do |row|
+      row.map do |cell|
         cell.to_s.rjust(num_total_length)
       end
     end
@@ -54,14 +53,6 @@ class Board
     board_array.all? { |cell| symbols.include?(cell) }
   end
 
-  def fill
-    @grid.each_index do |i|
-      @grid.each_index do |j|
-        @grid[i][j] = '@' if j == 2
-      end
-    end
-  end
-
   def win_row?(symbol)
     @grid.any? do |row|
       row.all? { |cell| cell == symbol }
@@ -69,15 +60,32 @@ class Board
   end
 
   def win_col?(symbol)
-    col = Array.new(@grid_spaces) { [] * @grid_spaces }
-    @grid.each_index do |i|
-      @grid.each_index do |j|
-        col[i][j] = @grid[j][i]
+    col = @grid.map.with_index do |_, i|
+      @grid.map.with_index do |_, j|
+        @grid[j][i]
       end
     end
+
     col.any? do |row|
       row.all? { |cell| cell == symbol }
     end
+  end
+
+  def win_diag?(symbol)
+    left_to_right = (0...@grid.length).all? do |i|
+      @grid[i][i] == symbol
+    end
+
+    right_to_left = (0...@grid.length).all? do |i|
+      j = @grid.length - 1 - i
+      @grid[i][j] == symbol
+    end
+
+    left_to_right || right_to_left
+  end
+
+  def win?(symbol)
+    win_row?(symbol) || win_col?(symbol) || win_diag?(symbol)
   end
 end
 
@@ -87,5 +95,4 @@ board.place_mark(2, '@')
 board.display_board
 board.fill
 board.display_board
-p board.win_row?('@')
-p board.win_col?('@')
+p board.win?('@')
