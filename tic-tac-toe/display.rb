@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Display
   def display_grid(grid_length)
     num_total_length = (grid_length**2).digits.count
@@ -24,12 +26,12 @@ module Display
   end
 
   def display_lets_play
-    game_starting = "\e[1mGAME IS READY\e[22m"
-    game_message = "Game Starting ..."
+    game_starting = "\e[1mGAME STARTING\e[22m"
+    game_message = 'Initializing ...'
     count_range = (3..0)
     count_range.first.downto(count_range.last).each do |i|
       system('clear')
-      puts "#{game_starting}\n\n#{game_message} #{i}" unless i == 0
+      puts "#{game_starting}\n\n#{game_message} #{i}" unless i.zero?
       sleep(0.8)
       system('clear')
     end
@@ -42,7 +44,7 @@ module Display
 
   def display_board_size_error
     system('clear')
-    puts "Number not entered! Enter the grid size for your game:"
+    puts 'Number not entered! Enter the grid size for your game:'
     prompt
   end
 
@@ -62,34 +64,39 @@ module Display
     prompt
   end
 
+  def display_create_player_error(player_num, name)
+    puts "Player ##{player_num}, #{name} is taken. Enter your name:"
+    prompt
+  end
+
   def display_create_symbol_prompt(name)
-    puts "#{name}, enter a non-number as a symbol you'd like as your token:"
+    puts "#{name}, enter a single symbol as your token (no numbers):"
     prompt
   end
 
   def display_create_symbol_error(name, symbol)
-    board.show
-    puts "#{name}, '#{symbol}' is not available, or taken"
-    puts "Enter a non-number symbol you'd like as your token:"
+    puts "#{name}, '#{symbol}' is not available or taken"
+    puts "Enter a single symbol as your token (no numbers):"
     prompt
   end
 
   def display_player_turn_prompt(player)
+    board.show
     puts "#{player.name}, enter a number to place '#{player.symbol}' in an available spot:"
     prompt
   end
 
   def display_player_turn_error(player)
     board.show
-    puts "Sorry #{player.name}, invalid spot. Try again:"
+    puts "Sorry #{player.name} (#{player.symbol}), invalid spot. Try again:"
     prompt
   end
 
   def display_winner
-    puts "\e[1mGAME OVER!\e[22m #{current_player.name} is the winner!"
+    puts "\e[1mGAME OVER!\e[22m #{current_player.name} is the winner!\n\n"
   end
 
   def display_tie
-    "\e[1mDRAW GAME!\e[22m"
+    "\e[1mDRAW GAME!\e[22m\n\n"
   end
 end

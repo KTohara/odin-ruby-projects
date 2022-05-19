@@ -5,7 +5,7 @@ require_relative 'display'
 # Tic-Tac-Toe game logic
 class Game
   include Display
-  attr_reader :board, :players, :current_player, :total_symbols
+  attr_reader :board, :players, :current_player, :total_symbols, :total_names
 
   def initialize
     @board = nil
@@ -60,21 +60,25 @@ class Game
 
   def create_player(player_num)
     display_create_player_prompt(player_num)
-    name = gets.chomp
-    while total_names.include?(name)
-      display_create_player_error(player_num)
+    name = nil
+    while name.nil?
+      input = gets.chomp
+      unless (total_names + total_symbols).include?(input) && total_names.any? 
+        name = input
+        break
+      end
+      display_create_player_error(player_num, input)
     end
-    @total_names << name
-    unless total_names.include(name)
+    total_names << name
     display_create_symbol_prompt(name)
     symbol = create_symbol(name)
-    @total_symbols << symbol
+    total_symbols << symbol
     Player.new(name, symbol)
   end
 
   def create_symbol(name)
     input = gets.chomp
-    return input if input.match?(/[^\d]/) && !total_symbols.include?(input)
+    return input if input.match?(/^[^\d]$/) && !(total_symbols + total_names).include?(input)
     display_create_symbol_error(name, input)
     create_symbol(name)
   end
@@ -84,14 +88,11 @@ class Game
       num = player_turn(current_player)
       board.place_symbol(num, current_player.symbol)
       break if board.win?(current_player.symbol)
-      board.show
       @current_player = switch_current_player
     end
   end
 
   def player_turn(player)
-    system('clear')
-    board.show
     display_player_turn_prompt(player)
     input = nil
     while input.nil?
