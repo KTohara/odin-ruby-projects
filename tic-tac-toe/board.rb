@@ -1,12 +1,14 @@
 # frozen_string_literal: true
+require_relative 'display'
 
 # Tic-Tac-Toe Board
 class Board
-  attr_reader :grid, :grid_spaces
+  include Display
+  attr_reader :grid, :grid_length
 
-  def initialize(num)
-    @grid = Array.new(num) { [''] * num }
-    @grid_spaces = num
+  def initialize(grid_length)
+    @grid = Array.new(grid_length) { [''] * grid_length }
+    @grid_length = grid_length
   end
 
   def create_board
@@ -16,26 +18,16 @@ class Board
     end
   end
 
-  def grid_to_display
-    num_total_length = (grid_spaces**2).digits.count
-    grid.map do |row|
-      row.map do |cell|
-        cell.to_s.rjust(num_total_length)
-      end
-    end
-  end
-
-  def display
+  def show
     system('clear')
-    display = grid_to_display
-    dash = '-' * (display[0][0].length + 2)
-    dash_plus = "#{dash}+" * (display.length - 1)
-    total_divider = "#{dash_plus}#{dash}"
-    display.each.with_index do |row, i|
+    sleep(0.05)
+    grid = display_grid(grid_length)
+    grid.each.with_index do |row, i|
       num_row = " #{row.join(' | ')} "
       puts num_row
-      puts total_divider unless i == display.length - 1
+      puts display_grid_decorations unless i == grid_length - 1
     end
+    puts
   end
 
   def place_symbol(num, symbol)
@@ -50,10 +42,16 @@ class Board
     grid.flatten[(num - 1)] == num
   end
 
-  def full_board?(symbols)
+  def full?(symbols)
     board_array = grid.flatten
     board_array.all? { |cell| symbols.include?(cell) }
   end
+
+  def win?(symbol)
+    win_row?(symbol) || win_col?(symbol) || win_diag?(symbol)
+  end
+
+  # private
 
   def win_row?(symbol)
     grid.any? do |row|
@@ -86,16 +84,10 @@ class Board
     left_to_right || right_to_left
   end
 
-  def win?(symbol)
-    win_row?(symbol) || win_col?(symbol) || win_diag?(symbol)
-  end
-
-  # private
-
   def fill(symbol)
     grid.each_index do |i|
       grid.each_index do |j|
-        grid[i][j] = symbol
+        grid[i][j] = symbol if i == 2
       end
     end
   end
