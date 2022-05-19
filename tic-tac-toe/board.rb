@@ -24,7 +24,7 @@ class Board
     sleep(0.05)
     grid = display_grid(grid_length)
     grid.each.with_index do |row, i|
-      num_row = " #{row.join(' | ')} "
+      num_row = " #{row.join(" \e[36m|\e[0m ")} "
       puts num_row
       puts display_grid_decorations unless i == grid_length - 1
     end

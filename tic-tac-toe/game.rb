@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'board'
 require_relative 'player'
 require_relative 'display'
@@ -30,7 +32,15 @@ class Game
   end
 
   def setup_players
-    (1..total_players).each { |player_num| @players << create_player(player_num) }
+    (1..total_players).each do |player_num|
+      display_create_name_prompt(player_num)
+      name = create_name(player_num)
+      total_names << name
+      display_create_symbol_prompt(name)
+      symbol = create_symbol(name)
+      total_symbols << symbol
+      players << Player.new(name, symbol)
+    end
     @current_player = players.first
   end
 
@@ -38,7 +48,7 @@ class Game
     display_board_size_prompt
     begin
       input = Integer(gets)
-    rescue
+    rescue StandardError
       display_board_size_error
       retry
     else
@@ -50,7 +60,7 @@ class Game
     display_total_player_prompt
     begin
       input = Integer(gets)
-    rescue
+    rescue StandardError
       display_total_player_error
       retry
     else
@@ -58,27 +68,18 @@ class Game
     end
   end
 
-  def create_player(player_num)
-    display_create_player_prompt(player_num)
-    name = nil
-    while name.nil?
-      input = gets.chomp
-      unless (total_names + total_symbols).include?(input) && total_names.any? 
-        name = input
-        break
-      end
-      display_create_player_error(player_num, input)
-    end
-    total_names << name
-    display_create_symbol_prompt(name)
-    symbol = create_symbol(name)
-    total_symbols << symbol
-    Player.new(name, symbol)
+  def create_name(player_num)
+    input = gets.chomp
+    return input unless (total_names + total_symbols).include?(input) && total_names.any?
+
+    display_create_name_error(player_num, input)
+    create_name(player_num)
   end
 
   def create_symbol(name)
     input = gets.chomp
     return input if input.match?(/^[^\d]$/) && !(total_symbols + total_names).include?(input)
+
     display_create_symbol_error(name, input)
     create_symbol(name)
   end
@@ -88,6 +89,7 @@ class Game
       num = player_turn(current_player)
       board.place_symbol(num, current_player.symbol)
       break if board.win?(current_player.symbol)
+
       @current_player = switch_current_player
     end
   end
@@ -107,7 +109,7 @@ class Game
   end
 
   def switch_current_player
-    current_player = players.rotate!.first
+    @current_player = players.rotate!.first
   end
 
   def game_over

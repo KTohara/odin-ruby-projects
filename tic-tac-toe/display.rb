@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Text display functions for Tic-Tac-Toe
 module Display
   def display_grid(grid_length)
     num_total_length = (grid_length**2).digits.count
@@ -14,7 +15,7 @@ module Display
     display = display_grid(grid_length)
     dash = '-' * (display[0][0].length + 2)
     dash_plus = "#{dash}+" * (display.length - 1)
-    "#{dash_plus}#{dash}"
+    "\e[36m#{dash_plus}#{dash}\e[0m"
   end
 
   def prompt
@@ -59,12 +60,12 @@ module Display
     prompt
   end
 
-  def display_create_player_prompt(player_num)
+  def display_create_name_prompt(player_num)
     puts "Player ##{player_num}, enter your name:"
     prompt
   end
 
-  def display_create_player_error(player_num, name)
+  def display_create_name_error(player_num, name)
     puts "Player ##{player_num}, #{name} is taken. Enter your name:"
     prompt
   end
@@ -76,7 +77,7 @@ module Display
 
   def display_create_symbol_error(name, symbol)
     puts "#{name}, '#{symbol}' is not available or taken"
-    puts "Enter a single symbol as your token (no numbers):"
+    puts 'Enter a single symbol as your token (no numbers):'
     prompt
   end
 
