@@ -20,12 +20,12 @@ class Board
 
   def show
     system('clear')
-    sleep(0.05)
+    display_banner
     board = display_grid
     board.each.with_index do |row, i|
       num_row = " #{row.join(" \e[36m|\e[0m ")} "
-      puts num_row
-      puts display_grid_decorations unless i == grid.length - 1
+      puts "#{" " * 10}#{num_row}"
+      puts "#{" " * 10}#{display_grid_decorations}" unless i == grid.length - 1
     end
     puts
   end
@@ -50,8 +50,6 @@ class Board
   def win?(symbol)
     win_row?(symbol) || win_col?(symbol) || win_diag?(symbol)
   end
-
-  # private
 
   def win_row?(symbol)
     grid.any? do |row|
