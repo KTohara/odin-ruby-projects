@@ -3,18 +3,19 @@
 require_relative 'board'
 require_relative 'player'
 require_relative 'display'
+# require_relative 'stats'
 
 # Tic-Tac-Toe game logic
 class Game
   include Display
-  attr_reader :board, :players, :current_player, :total_symbols, :total_names
+  attr_reader :board, :players, :current_player, :taken
 
   def initialize
     @board = nil
     @players = []
     @current_player = nil
-    @total_names = []
-    @total_symbols = []
+    @taken = []
+    # @stats = Stats.new(players)
   end
 
   def play
@@ -37,79 +38,38 @@ class Game
     board.create_board
   end
 
+  def input_board_size
+    display_board_size_prompt
+    input = Integer(gets) rescue false
+    until input.instance_of?(Integer) && input.between?(3, 10)
+      display_board_size_error
+      input = Integer(gets) rescue false
+    end
+    input
+  end
+
   def setup_players
-    (1..total_players).each do |player_num|
-      display_create_name_prompt(player_num)
-      name = create_name(player_num)
-      total_names << name
-
-      display_create_symbol_prompt(name)
-      symbol = create_symbol(name)
-      total_symbols << symbol
-
-      players << Player.new(name, symbol)
+    (1..total_players).each do |player_num| 
+      player = Player.new(player_num, taken)
+      players << player
+      taken << player.symbol
+      taken << player.name
     end
     @current_player = players.first
   end
 
-  def input_board_size
-    display_board_size_prompt
-    board_size = nil
-    begin
-      loop do
-        input = Integer(gets)
-        if !input.between?(3, 10)
-          display_board_size_error
-        else
-          board_size = input
-          break
-        end
-      end
-    rescue StandardError
-      display_board_size_error
-      retry
-    end
-    board_size
-  end
-
   def total_players
     display_total_player_prompt
-    player_num = nil
-    begin
-      loop do
-        input = Integer(gets)
-        if input < 2
-          display_total_player_error
-        else
-          player_num = input
-          break
-        end
-      end
-    rescue StandardError
+    input = Integer(gets) rescue false
+    until input.instance_of?(Integer) && input >= 2
       display_total_player_error
-      retry
+      input = Integer(gets) rescue false
     end
-    player_num
-  end
-
-  def create_name(player_num)
-    input = gets.chomp
-    return input unless (total_names + total_symbols).include?(input) && total_names.any?
-
-    display_create_name_error(player_num, input)
-    create_name(player_num)
-  end
-
-  def create_symbol(name)
-    input = gets.chomp
-    return input if input.match?(/^[^\d]$/) && !(total_symbols + total_names).include?(input)
-
-    display_create_symbol_error(name, input)
-    create_symbol(name)
+    input
   end
 
   def play_turns
-    until board.full?(total_symbols)
+    until board.full?(taken)
       display_play_turn_prompt(current_player)
       num = player_turn(current_player)
       board.place_symbol(num, current_player.symbol)
@@ -138,10 +98,6 @@ class Game
 
   def game_over
     board.show
-    if board.win?(current_player.symbol)
-      display_winner
-    else
-      display_tie
-    end
+    board.win?(current_player.symbol) ? display_winner : display_tie
   end
 end
