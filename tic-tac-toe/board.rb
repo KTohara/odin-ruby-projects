@@ -81,12 +81,4 @@ class Board
 
     left_to_right || right_to_left
   end
-
-  def fill(symbol)
-    grid.each_index do |i|
-      grid.each_index do |j|
-        grid[i][j] = symbol if i == 2
-      end
-    end
-  end
 end

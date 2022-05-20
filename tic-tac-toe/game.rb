@@ -25,7 +25,7 @@ class Game
     game_over
   end
 
-  protected
+  private
 
   def setup_board
     system('clear')
