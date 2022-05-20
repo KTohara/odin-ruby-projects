@@ -18,16 +18,20 @@ module Display
     "\e[36m#{dash_plus}#{dash}\e[0m"
   end
 
-  def banner
-    length = grid.length
-  end
-
   def prompt
     print '> '
   end
 
-  def display_intro
-    puts "Let's Play Tic-Tac-Toe! \n\n"
+  def display_banner
+    puts "\e[36m █████     ███               █████                           █████                      \e[0m"
+    puts "\e[36m ░░███     ░░░               ░░███                           ░░███                      \e[0m"
+    puts "\e[36m ███████   ████   ██████     ███████    ██████    ██████     ███████    ██████   ██████ \e[0m"
+    puts "\e[36m░░░███░   ░░███  ███░░███   ░░░███░    ░░░░░███  ███░░███   ░░░███░    ███░░███ ███░░███\e[0m"
+    puts "\e[36m  ░███     ░███ ░███ ░░░      ░███      ███████ ░███ ░░░      ░███    ░███ ░███░███████ \e[0m"
+    puts "\e[36m  ░███ ███ ░███ ░███  ███     ░███ ███ ███░░███ ░███  ███     ░███ ███░███ ░███░███░░░  \e[0m"
+    puts "\e[36m  ░░█████  █████░░██████      ░░█████ ░░████████░░██████      ░░█████ ░░██████ ░░██████ \e[0m"
+    puts "\e[36m   ░░░░░  ░░░░░  ░░░░░░        ░░░░░   ░░░░░░░░  ░░░░░░        ░░░░░   ░░░░░░   ░░░░░░  \e[0m"
+    puts
   end
 
   def display_lets_play
@@ -43,43 +47,48 @@ module Display
   end
 
   def display_board_size_prompt
-    puts 'Enter the grid size for your game:'
+    puts 'Enter the grid size for your game (between 3 to 10):'
     prompt
   end
 
   def display_board_size_error
     system('clear')
-    puts 'Number not entered! Enter the grid size for your game:'
+    puts 'Invalid board size! Enter the grid size for your game (between 3 to 10):'
     prompt
   end
 
   def display_total_player_prompt
-    puts 'Enter how many players in the game:'
+    system('clear')
+    puts 'Enter how many players in the game (two or more players required):'
     prompt
   end
 
   def display_total_player_error
-    board.show
-    puts 'Number not entered! Enter how many players in the game:'
+    system('clear')
+    puts 'Invalid number of players! Enter how many players in the game (two or more players required):'
     prompt
   end
 
   def display_create_name_prompt(player_num)
+    system('clear')
     puts "Player ##{player_num}, enter your name:"
     prompt
   end
 
   def display_create_name_error(player_num, name)
+    system('clear')
     puts "Player ##{player_num}, #{name} is taken. Enter your name:"
     prompt
   end
 
   def display_create_symbol_prompt(name)
+    system('clear')
     puts "#{name}, enter a single symbol as your token (no numbers):"
     prompt
   end
 
   def display_create_symbol_error(name, symbol)
+    system('clear')
     puts "#{name}, '#{symbol}' is not available or taken"
     puts 'Enter a single symbol as your token (no numbers):'
     prompt

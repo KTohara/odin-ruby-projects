@@ -12,12 +12,12 @@ def play_game
 end
 
 def repeat_game
-  puts "Would you like to play a new game? Press 'y' to start a new game"
-  repeat_input = gets.chomp.downcase
-  if repeat_input == 'y'
+  puts "Play another game? Enter 'y' to start a new game"
+  input = gets.chomp.downcase
+  if input == 'y'
     play_game
   else
-    puts 'Thanks for playing!'
+    puts "\e[1mThanks for Playing!\e[22m"
   end
 end
 

@@ -25,8 +25,14 @@ class Game
     game_over
   end
 
+  protected
+
   def setup_board
-    display_intro
+    system('clear')
+    puts "\e[1mLets Play...\e[22m\n\n".center(95)
+    display_banner
+    sleep(2)
+    system('clear')
     @board = Board.new(input_board_size)
     board.create_board
   end
@@ -48,26 +54,42 @@ class Game
 
   def input_board_size
     display_board_size_prompt
+    board_size = nil
     begin
-      input = Integer(gets)
+      loop do
+        input = Integer(gets)
+        if !input.between?(3, 10)
+          display_board_size_error
+        else
+          board_size = input
+          break
+        end
+      end
     rescue StandardError
       display_board_size_error
       retry
-    else
-      input
     end
+    board_size
   end
 
   def total_players
     display_total_player_prompt
+    player_num = nil
     begin
-      input = Integer(gets)
+      loop do
+        input = Integer(gets)
+        if input < 2
+          display_total_player_error
+        else
+          player_num = input
+          break
+        end
+      end
     rescue StandardError
       display_total_player_error
       retry
-    else
-      input
     end
+    player_num
   end
 
   def create_name(player_num)
