@@ -36,9 +36,11 @@ class Game
       display_create_name_prompt(player_num)
       name = create_name(player_num)
       total_names << name
+
       display_create_symbol_prompt(name)
       symbol = create_symbol(name)
       total_symbols << symbol
+
       players << Player.new(name, symbol)
     end
     @current_player = players.first
@@ -86,6 +88,7 @@ class Game
 
   def play_turns
     until board.full?(total_symbols)
+      display_play_turn_prompt(current_player)
       num = player_turn(current_player)
       board.place_symbol(num, current_player.symbol)
       break if board.win?(current_player.symbol)
@@ -95,7 +98,6 @@ class Game
   end
 
   def player_turn(player)
-    display_player_turn_prompt(player)
     input = nil
     while input.nil?
       num = gets.chomp.to_i
@@ -121,6 +123,3 @@ class Game
     end
   end
 end
-
-game = Game.new
-game.play

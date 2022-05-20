@@ -5,11 +5,10 @@ require_relative 'display'
 # Tic-Tac-Toe Board
 class Board
   include Display
-  attr_reader :grid, :grid_length
+  attr_reader :grid
 
   def initialize(grid_length)
     @grid = Array.new(grid_length) { [''] * grid_length }
-    @grid_length = grid_length
   end
 
   def create_board
@@ -22,11 +21,11 @@ class Board
   def show
     system('clear')
     sleep(0.05)
-    grid = display_grid(grid_length)
-    grid.each.with_index do |row, i|
+    board = display_grid
+    board.each.with_index do |row, i|
       num_row = " #{row.join(" \e[36m|\e[0m ")} "
       puts num_row
-      puts display_grid_decorations unless i == grid_length - 1
+      puts display_grid_decorations unless i == grid.length - 1
     end
     puts
   end

@@ -2,8 +2,8 @@
 
 # Text display functions for Tic-Tac-Toe
 module Display
-  def display_grid(grid_length)
-    num_total_length = (grid_length**2).digits.count
+  def display_grid
+    num_total_length = (grid.length**2).digits.count
     grid.map do |row|
       row.map do |cell|
         cell.to_s.rjust(num_total_length)
@@ -12,10 +12,14 @@ module Display
   end
 
   def display_grid_decorations
-    display = display_grid(grid_length)
+    display = display_grid
     dash = '-' * (display[0][0].length + 2)
     dash_plus = "#{dash}+" * (display.length - 1)
     "\e[36m#{dash_plus}#{dash}\e[0m"
+  end
+
+  def banner
+    length = grid.length
   end
 
   def prompt
@@ -81,7 +85,7 @@ module Display
     prompt
   end
 
-  def display_player_turn_prompt(player)
+  def display_play_turn_prompt(player)
     board.show
     puts "#{player.name}, enter a number to place '#{player.symbol}' in an available spot:"
     prompt
