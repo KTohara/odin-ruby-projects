@@ -3,24 +3,24 @@
 require_relative 'board'
 require_relative 'player'
 require_relative 'display'
-# require_relative 'stats'
+require_relative 'stats'
 
 # Tic-Tac-Toe game logic
 class Game
   include Display
-  attr_reader :board, :players, :current_player, :taken
+  attr_reader :board, :players, :current_player, :taken, :stats
 
   def initialize
     @board = nil
     @players = []
     @current_player = nil
     @taken = []
-    # @stats = Stats.new(players)
   end
 
-  def play
+  def play(replay)
     setup_board
-    setup_players
+    setup_players(replay)
+    setup_stats(replay)
     display_lets_play
     play_turns
     game_over
@@ -48,8 +48,10 @@ class Game
     input
   end
 
-  def setup_players
-    (1..total_players).each do |player_num| 
+  def setup_players(replay)
+    return if replay
+
+    (1..total_players).each do |player_num|
       player = Player.new(player_num, taken)
       players << player
       taken << player.symbol
@@ -67,11 +69,16 @@ class Game
     end
     input
   end
+  
+  def setup_stats(replay)
+    return if replay
+    @stats = Stats.new
+    stats.create_stats(players)
+  end
 
   def play_turns
     until board.full?(taken)
-      display_play_turn_prompt(current_player)
-      num = player_turn(current_player)
+      num = player_turn(current_player, board)
       board.place_symbol(num, current_player.symbol)
       break if board.win?(current_player.symbol)
 
@@ -79,15 +86,12 @@ class Game
     end
   end
 
-  def player_turn(player)
-    input = nil
-    while input.nil?
-      num = gets.chomp.to_i
-      if board.valid_move?(num)
-        input = num
-        break
-      end
-      display_player_turn_error(player)
+  def player_turn(player, board)
+    display_play_turn_prompt(player, board)
+    input = gets.chomp.to_i
+    until board.valid_move?(input)
+      display_player_turn_error(player, board)
+      input = gets.chomp.to_i
     end
     input
   end
@@ -97,7 +101,8 @@ class Game
   end
 
   def game_over
-    board.show
+    show_board
     board.win?(current_player.symbol) ? display_winner : display_tie
+    stats.add_win(current_player)
   end
 end

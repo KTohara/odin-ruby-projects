@@ -5,13 +5,18 @@ require_relative 'display'
 # Player Class - Requires two instances for a game
 class Player
   include Display
-  attr_reader :player_num, :name, :symbol, :total_wins
+  attr_reader :player_num, :name, :symbol
 
   def initialize(player_num, taken)
     @player_num = player_num
-    @name = create_name(player_num, taken)
-    @symbol = create_symbol(name, taken)
-    @total_wins = 0
+    @name = nil
+    @symbol = nil
+    create_player(player_num, taken)
+  end
+
+  def create_player(player_num, taken)
+    create_name(player_num, taken)
+    create_symbol(name, taken)
   end
 
   def create_name(player_num, taken)
@@ -22,7 +27,7 @@ class Player
       input = gets.chomp
     end
     taken << input
-    input
+    @name = input
   end
 
   def create_symbol(name, taken)
@@ -33,6 +38,6 @@ class Player
       input = gets.chomp
     end
     taken << input
-    input
+    @symbol = input
   end
 end
