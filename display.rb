@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'byebug'
+
 # Text display functions for Tic-Tac-Toe
 module Display
   def display_grid_array
