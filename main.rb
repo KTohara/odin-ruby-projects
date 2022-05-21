@@ -25,7 +25,6 @@ def repeat_game(game)
     end
   else
     puts "\e[1mThanks for Playing!\e[22m"
-    sleep(2)
     exit 0
   end
 end

@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-# Statistics for Tic-Tac-Toe
+# Win tracker for players
 class Stats
   attr_accessor :wins
 
   def initialize
     @wins = {}
   end
-  
+
   def create_stats(players)
     players.each_with_object(wins) { |player, hash| hash[player.name] = 0 }
   end

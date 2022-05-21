@@ -4,10 +4,12 @@ require_relative 'board'
 require_relative 'player'
 require_relative 'display'
 require_relative 'stats'
+require_relative 'messages'
 
 # Tic-Tac-Toe game logic
 class Game
   include Display
+  include Messages
   attr_reader :board, :players, :current_player, :taken, :stats
 
   def initialize
@@ -39,10 +41,10 @@ class Game
   end
 
   def input_board_size
-    display_board_size_prompt
+    prompt_board_size
     input = Integer(gets) rescue false
     until input.instance_of?(Integer) && input.between?(3, 10)
-      display_board_size_error
+      error_board_size
       input = Integer(gets) rescue false
     end
     input
@@ -61,24 +63,25 @@ class Game
   end
 
   def total_players
-    display_total_player_prompt
+    prompt_total_player
     input = Integer(gets) rescue false
     until input.instance_of?(Integer) && input >= 2
-      display_total_player_error
+      error_total_player
       input = Integer(gets) rescue false
     end
     input
   end
-  
+
   def setup_stats(replay)
     return if replay
+
     @stats = Stats.new
     stats.create_stats(players)
   end
 
   def play_turns
     until board.full?(taken)
-      num = player_turn(current_player, board)
+      num = player_turn(current_player)
       board.place_symbol(num, current_player.symbol)
       break if board.win?(current_player.symbol)
 
@@ -86,11 +89,11 @@ class Game
     end
   end
 
-  def player_turn(player, board)
-    display_play_turn_prompt(player, board)
+  def player_turn(player)
+    prompt_play_turn(player)
     input = gets.chomp.to_i
     until board.valid_move?(input)
-      display_player_turn_error(player, board)
+      error_player_turn(player)
       input = gets.chomp.to_i
     end
     input
@@ -101,8 +104,12 @@ class Game
   end
 
   def game_over
-    show_board
-    board.win?(current_player.symbol) ? display_winner : display_tie
-    stats.add_win(current_player)
+    display_board
+    if board.win?(current_player.symbol)
+      message_winner
+      stats.add_win(current_player)
+    else
+      message_tie
+    end
   end
 end

@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 require_relative 'display'
+require_relative 'messages'
 
 # Player Class - Requires two instances for a game
 class Player
   include Display
+  include Messages
   attr_reader :player_num, :name, :symbol
 
   def initialize(player_num, taken)
@@ -20,10 +22,10 @@ class Player
   end
 
   def create_name(player_num, taken)
-    display_create_name_prompt(player_num)
+    prompt_create_name(player_num)
     input = gets.chomp
     while taken.include?(input) && taken.any?
-      display_create_name_error(player_num, input)
+      error_create_name(player_num, input)
       input = gets.chomp
     end
     taken << input
@@ -31,10 +33,10 @@ class Player
   end
 
   def create_symbol(name, taken)
-    display_create_symbol_prompt(name)
+    prompt_create_symbol(name)
     input = gets.chomp
     until input.match?(/^[^\d]$/) && !taken.include?(input)
-      display_create_symbol_error(name, input)
+      error_create_symbol(name, input)
       input = gets.chomp
     end
     taken << input

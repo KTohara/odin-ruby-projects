@@ -2,7 +2,7 @@
 
 require_relative 'display'
 
-# Tic-Tac-Toe Board
+# Board logic
 class Board
   include Display
   attr_reader :grid
@@ -17,18 +17,6 @@ class Board
       row.map! { num += 1 }
     end
   end
-
-  # def show
-  #   system('clear')
-  #   display_banner
-  #   board = display_grid
-  #   board.each.with_index do |row, i|
-  #     num_row = " #{row.join(" \e[36m|\e[0m ")} "
-  #     puts "#{' ' * 4}#{num_row}"
-  #     puts "#{' ' * 4}#{display_grid_array}" unless i == grid.length - 1
-  #   end
-  #   puts
-  # end
 
   def place_symbol(num, symbol)
     grid.each_index do |i|
