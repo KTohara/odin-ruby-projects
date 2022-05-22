@@ -30,6 +30,10 @@ class Board
     grid.flatten[(num - 1)] == num
   end
 
+  def valid_pos
+    grid.flatten.select { |el| el.instance_of?(Integer) }
+  end
+
   def full?(symbols)
     board_array = grid.flatten
     board_array.all? { |cell| symbols.include?(cell) }

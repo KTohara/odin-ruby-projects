@@ -35,24 +35,26 @@ module Display
     game_message = 'Initializing ...'
     3.downto(1).each do |i|
       system('clear')
-      puts "#{game_starting}\n\n#{game_message} #{i}" unless i.zero?
-      sleep(0.8)
+      puts "\e[1mLets Play...\e[22m\n\n".center(95)
+      display_banner
+      puts "\n\n#{game_starting}\n\n#{game_message} #{i}" unless i.zero?
+      sleep(1)
       system('clear')
     end
   end
 
   def stats_display_length
-    stats.wins.map { |k, v| k.length + v.to_s.length }.max + 6
+    players.map { |player| player.name.length + player.wins.to_s.length + player.symbol.length }.max + 7
   end
 
   def display_score_array
     score_top = "+#{'=- SCORE -='.center(stats_display_length, '-')}+"
     score_bottom = "+#{'-' * (score_top.length - 2)}+"
-    stats.wins.each_with_object([]).with_index do |((player, score), acc), i|
-      spaces = score_top.length - player.length - score.digits.count - 6
+    players.each_with_object([]).with_index do |(player, acc), i|
+      spaces = score_top.length - player.name.length - player.wins.digits.count - 8 
       acc << score_top if i.zero?
-      acc << "|  #{player}: #{score}#{' ' * spaces}|"
-      acc << score_bottom if i == stats.wins.length - 1
+      acc << "|  #{player.symbol} #{player.name}: #{player.wins}#{' ' * spaces}|"
+      acc << score_bottom if i == players.length - 1
     end
   end
 

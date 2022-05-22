@@ -3,23 +3,30 @@
 require_relative 'display'
 require_relative 'messages'
 
-# Player Class - Requires two instances for a game
+# Player class
 class Player
   include Display
   include Messages
-  attr_reader :player_num, :name, :symbol
+  attr_reader :name, :symbol
+  attr_accessor :wins
 
   def initialize(player_num, taken)
-    @player_num = player_num
-    @name = nil
-    @symbol = nil
-    create_player(player_num, taken)
+    @name = create_name(player_num, taken)
+    @symbol = create_symbol(name, taken)
+    @wins = 0
   end
 
-  def create_player(player_num, taken)
-    create_name(player_num, taken)
-    create_symbol(name, taken)
+  def get_position(board)
+    prompt_get_position(self)
+    input = gets.chomp.to_i
+    until board.valid_move?(input)
+      error_get_position(self)
+      input = gets.chomp.to_i
+    end
+    input
   end
+
+  private
 
   def create_name(player_num, taken)
     prompt_create_name(player_num)
@@ -29,7 +36,7 @@ class Player
       input = gets.chomp
     end
     taken << input
-    @name = input
+    input
   end
 
   def create_symbol(name, taken)
@@ -40,6 +47,36 @@ class Player
       input = gets.chomp
     end
     taken << input
-    @symbol = input
+    inputn
+  end
+end
+
+# Computer class
+class Computer
+  include Messages
+  include Display
+  attr_reader :name, :symbol
+  attr_accessor :wins
+
+  @@cpu_names = ['HAL-9000', 'Data', 'Bishop', 'C3P0', 'R2D2', 'Agent Smith', 'T-800', 'T-1000', 'Wall-E']
+  @@cpu_symbols = ['§', '⁂', '♠', '♣', '♥', '♦', '𝄞', '⚝', '🄋']
+
+  def initialize(player_num)
+    @wins = 0
+    create_cpu(player_num)
+  end
+
+  def get_position(board)
+    board.valid_pos.sample
+  end
+
+  private
+
+  def create_cpu(player_num)
+    @name = @@cpu_names.sample
+    @symbol = @@cpu_symbols.sample
+    @@cpu_names.delete(name)
+    @@cpu_symbols.delete(symbol)
+    cpu_prompt_creation(player_num, self)
   end
 end

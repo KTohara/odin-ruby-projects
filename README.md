@@ -5,4 +5,5 @@ Tic-Tac-Toe project from [Odin Project](https://www.theodinproject.com/lessons/r
 [![Run on Repl.it](https://repl.it/badge/github/KTohara/ruby_tictactoe)](https://replit.com/@KenTohara/rubytictactoe)
 
 * Dynamic display - stats and board size display grows depending on input
-* Supports multiple players
+* Supports multiple players - Human and Simple AI
+  
