@@ -64,7 +64,7 @@ class TicTacToe
     print "Play another game? (y)es/(n)o \n> "
     case gets.chomp.downcase
     when 'y'
-      original_players
+      play_original_players
     when 'n'
       puts "\e[1mThanks for Playing!\e[22m"
       exit 0
@@ -73,7 +73,7 @@ class TicTacToe
     end
   end
 
-  def self.original_players
+  def self.play_original_players
     print "Play with original players? (y)es/(n)o \n> "
     case gets.chomp.downcase
     when 'y'

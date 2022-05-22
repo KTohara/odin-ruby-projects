@@ -60,6 +60,7 @@ class Game
   end
 
   def switch_current_player
+    # can't use rotate! - breaks display
     total_rotations = (players.index(current_player) + players.length + 1) % players.length
     @current_player = players.rotate(total_rotations).first
   end
