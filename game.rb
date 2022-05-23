@@ -21,6 +21,7 @@ class Game
   def play
     setup_board
     display_lets_play
+    display_board
     play_turns
     game_over
   end
@@ -33,13 +34,11 @@ class Game
 
   def play_turns
     until board.full?(symbols)
-      display_board
-      num = current_player.get_position(board)
-      board.place_symbol(num, current_player.symbol)
+      num = current_player.get_position(board, symbols)
+      board.place_symbol(num, current_player.symbol) if current_player.instance_of?(Player)
       display_board
       break if board.win?(current_player.symbol)
 
-      cpu_position(current_player, num) if current_player.instance_of?(Computer)
       @current_player = switch_current_player
     end
   end
@@ -65,3 +64,24 @@ class Game
     @current_player = players.rotate(total_rotations).first
   end
 end
+
+# board = Board.new(3)
+# board.create_board
+# cpu = Computer.new(1)
+# board.place_symbol(1, '#')
+# board.place_symbol(2, '#')
+# board.place_symbol(3, '@')
+# board.place_symbol(4, '@')
+# board.place_symbol(5, '@')
+# board.place_symbol(6, '#')
+# board.place_symbol(7, '@')
+# board.place_symbol(8, '@')
+# board.place_symbol(9, '@')
+
+# p board.win_diag?('@')
+# [["#", "#", "@"], ["@", "@", "#"], ["#", "@", "@"]]
+# p cpu.possible_moves(board, ['@', '#'])
+# p cpu.get_position(board, ['@', '#'])
+# g = Game.new(3, [cpu])
+# g.board.create_board
+# g.play_turns

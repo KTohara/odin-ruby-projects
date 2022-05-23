@@ -62,9 +62,13 @@ class Board
   end
 
   def win_diag?(symbol)
-    (0...grid.length).all? do |i|
+    left_to_right = (0...grid.length).all? { |i| grid[i][i] == symbol }
+
+    right_to_left = (0...grid.length).all? do |i|
       j = grid.length - 1 - i
-      grid[i][i] == symbol || grid[i][j] == symbol
+      grid[i][j] == symbol
     end
+
+    left_to_right || right_to_left
   end
 end

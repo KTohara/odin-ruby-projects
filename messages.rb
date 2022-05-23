@@ -65,8 +65,18 @@ module Messages
     sleep(2.5)
   end
 
-  def cpu_position(cpu, position_num)
+  def cpu_prompt_random_move(cpu, position_num)
     puts "#{cpu.name} (#{cpu.symbol}) chose position '#{position_num}'"
+    sleep(1.5)
+  end
+
+  def cpu_prompt_block(cpu, position_num)
+    puts "#{cpu.name} (#{cpu.symbol}) initiates block protocol on position '#{position_num}'"
+    sleep(1.5)
+  end
+
+  def cpu_prompt_win(cpu, position_num)
+    puts "#{cpu.name} (#{cpu.symbol}) initiates win protocol on position '#{position_num}'"
     sleep(1.5)
   end
 

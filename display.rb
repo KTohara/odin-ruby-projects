@@ -51,7 +51,7 @@ module Display
     score_top = "+#{'=- SCORE -='.center(stats_display_length, '-')}+"
     score_bottom = "+#{'-' * (score_top.length - 2)}+"
     players.each_with_object([]).with_index do |(player, acc), i|
-      spaces = score_top.length - player.name.length - player.wins.digits.count - 8 
+      spaces = score_top.length - player.name.length - player.wins.digits.count - 8
       acc << score_top if i.zero?
       acc << "|  #{player.symbol} #{player.name}: #{player.wins}#{' ' * spaces}|"
       acc << score_bottom if i == players.length - 1

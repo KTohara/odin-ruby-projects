@@ -15,14 +15,12 @@ class TicTacToe
     repeat_game(game)
   end
 
-  private
-
   def self.input_board_size
     prompt_board_size
-    input = Integer(gets) rescue false
+    input = gets.chomp.to_i
     until input.instance_of?(Integer) && input.between?(3, 10)
       error_board_size
-      input = Integer(gets) rescue false
+      input = gets.chomp.to_i
     end
     input
   end
@@ -40,49 +38,44 @@ class TicTacToe
 
   def self.total_players
     prompt_total_player
-    input = Integer(gets) rescue false
+    input = gets.chomp.to_i
     until input.instance_of?(Integer) && input.between?(2, 8)
       error_total_player
-      input = Integer(gets) rescue false
+      input = gets.chomp.to_i
     end
     input
   end
 
   def self.cpu?(player_num)
-    prompt_cpu_player(player_num)
-    case gets.chomp.downcase
-    when 'c'
-      true
-    when 'h'
-      false
-    else
-      cpu?(player_num)
+    input = nil
+    until %w[h c].include?(input)
+      prompt_cpu_player(player_num)
+      input = gets.chomp.downcase
     end
+    input == 'c'
   end
 
   def self.repeat_game(game)
-    print "Play another game? (y)es/(n)o \n> "
-    case gets.chomp.downcase
-    when 'y'
-      play_original_players
-    when 'n'
+    input = nil
+    until %w[y n].include?(input)
+      print "Play another game? (y)es/(n)o \n> "
+      input = gets.chomp.downcase
+    end
+    if input == 'y'
+      play_original_players(game)
+    else
       puts "\e[1mThanks for Playing!\e[22m"
       exit 0
-    else
-      repeat_game(game)
     end
   end
 
-  def self.play_original_players
-    print "Play with original players? (y)es/(n)o \n> "
-    case gets.chomp.downcase
-    when 'y'
-      play_game(true, game)
-    when 'n'
-      play_game
-    else
-      repeat_game(game)
+  def self.play_original_players(game)
+    input = nil
+    until %w[y n].include?(input)
+      print "Play with original players? (y)es/(n)o \n> "
+      input = gets.chomp.downcase
     end
+    input == 'y' ? play_game(true, game) : play_game
   end
 end
 
