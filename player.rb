@@ -67,18 +67,18 @@ class Computer
   end
 
   def get_position(board, symbols)
+    cpu_prompt_thinking(name, symbol)
     if !win_move(board, symbols).nil?
       input = win_move(board, symbols)
-      msg = cpu_prompt_win(self, input)
+      cpu_prompt_win(self, input)
     elsif !block_move(board, symbols).nil?
       input = block_move(board, symbols)
-      msg = cpu_prompt_block(self, input)
+      cpu_prompt_block(self, input)
     else
       input = board.valid_pos.sample
-      msg = cpu_prompt_random_move(self, input)
+      cpu_prompt_random_move(self, input)
     end
-    board.place_symbol(input, symbol)
-    msg
+    input
   end
 
   private

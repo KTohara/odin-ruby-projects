@@ -8,4 +8,3 @@ Tic-Tac-Toe project from [Odin Project](https://www.theodinproject.com/lessons/r
 * Supports multiple players 
   - Human support
   - AI will choose to block or win
-  

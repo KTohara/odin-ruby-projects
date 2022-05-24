@@ -35,7 +35,7 @@ class Game
   def play_turns
     until board.full?(symbols)
       num = current_player.get_position(board, symbols)
-      board.place_symbol(num, current_player.symbol) if current_player.instance_of?(Player)
+      board.place_symbol(num, current_player.symbol)
       display_board
       break if board.win?(current_player.symbol)
 

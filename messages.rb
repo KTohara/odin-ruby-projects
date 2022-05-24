@@ -65,6 +65,11 @@ module Messages
     sleep(2.5)
   end
 
+  def cpu_prompt_thinking(name, symbol)
+    puts "#{name} (#{symbol}) is thinking..."
+    sleep(1)
+  end
+
   def cpu_prompt_random_move(cpu, position_num)
     puts "#{cpu.name} (#{cpu.symbol}) chose position '#{position_num}'"
     sleep(1.5)

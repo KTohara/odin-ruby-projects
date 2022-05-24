@@ -30,8 +30,7 @@ class TicTacToe
 
     taken = []
     (1..total_players).inject([]) do |players, player_num|
-      is_computer_player = cpu?(player_num)
-      player = is_computer_player ? Computer.new(player_num) : Player.new(player_num, taken)
+      player = cpu?(player_num) ? Computer.new(player_num) : Player.new(player_num, taken)
       players << player
     end
   end
