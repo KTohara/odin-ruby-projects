@@ -64,24 +64,3 @@ class Game
     @current_player = players.rotate(total_rotations).first
   end
 end
-
-# board = Board.new(3)
-# board.create_board
-# cpu = Computer.new(1)
-# board.place_symbol(1, '#')
-# board.place_symbol(2, '#')
-# board.place_symbol(3, '@')
-# board.place_symbol(4, '@')
-# board.place_symbol(5, '@')
-# board.place_symbol(6, '#')
-# board.place_symbol(7, '@')
-# board.place_symbol(8, '@')
-# board.place_symbol(9, '@')
-
-# p board.win_diag?('@')
-# [["#", "#", "@"], ["@", "@", "#"], ["#", "@", "@"]]
-# p cpu.possible_moves(board, ['@', '#'])
-# p cpu.get_position(board, ['@', '#'])
-# g = Game.new(3, [cpu])
-# g.board.create_board
-# g.play_turns
