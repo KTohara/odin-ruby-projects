@@ -16,10 +16,10 @@ class Player
     @wins = 0
   end
 
-  def get_position(board, _symbols)
+  def get_position(game)
     prompt_get_position(self)
     input = gets.chomp.to_i
-    until board.valid_move?(input)
+    until game.board.valid_move?(input)
       error_get_position(self)
       input = gets.chomp.to_i
     end
@@ -66,57 +66,24 @@ class Computer
     create_cpu(player_num)
   end
 
-  def get_position(board, symbols)
+  # game.board.place_symbol(1, '§')
+  # game.board.place_symbol(4, '§')
+  # game.board.place_symbol(6, '@')
+  # game.board.place_symbol(9, '@')
+
+  def get_position(game)
     cpu_prompt_thinking(name, symbol)
-    if !win_move(board, symbols).nil?
-      input = win_move(board, symbols)
-      cpu_prompt_win(self, input)
-    elsif !block_move(board, symbols).nil?
-      input = block_move(board, symbols)
-      cpu_prompt_block(self, input)
-    else
-      input = board.valid_pos.sample
-      cpu_prompt_random_move(self, input)
-    end
-    input
+    win_move(game) || block_move(game) || random_move(game)
+    # input = win_move(game.board, game.symbols)
+    # cpu_prompt_win(self, input)
+    # if !block_move(game.board, game.symbols).nil?
+    #   input = block_move(game.board, game.symbols)
+    #   cpu_prompt_block(self, input)
+    # input = game.board.valid_pos.sample
+    # cpu_prompt_random_move(self, input)
   end
 
   private
-
-  def possible_moves(board, symbols)
-    all_arrays = board.grid + board.grid.transpose + diagonals(board)
-    all_arrays.select do |arr|
-      empties = arr.count { |el| el.instance_of?(Integer) } == 1
-      all_symbols = symbols.any? { |sym| arr.count(sym) == board.grid.length - 1 }
-      empties && all_symbols
-    end
-  end
-
-  def diagonals(board)
-    board = board.grid
-    (0...board.length).each_with_object([[], []]) do |i, acc|
-      j = board.length - 1 - i
-      acc.first << board[i][i]
-      acc.last << board[i][j]
-      acc
-    end
-  end
-
-  def block_move(board, symbols)
-    valid = possible_moves(board, symbols)
-    move_arr = valid.find { |arr| !arr.include?(symbol) }
-    return if move_arr.nil?
-
-    move_arr.find { |el| el.instance_of?(Integer) }
-  end
-
-  def win_move(board, symbols)
-    valid = possible_moves(board, symbols)
-    move_arr = valid.find { |arr| arr.include?(symbol) }
-    return if move_arr.nil?
-
-    move_arr.find { |el| el.instance_of?(Integer) }
-  end
 
   def create_cpu(player_num)
     @name = @@cpu_names.sample
@@ -125,4 +92,45 @@ class Computer
     @@cpu_symbols.delete(symbol)
     cpu_prompt_creation(player_num, self)
   end
+
+  def win_move(game)
+    (1..game.board.grid.flatten.length).each do |num|
+      dup_board = game.board.dup
+      next unless dup_board.valid_move?(num)
+
+      dup_board.place_symbol(num, symbol)
+      if dup_board.win?(symbol)
+        cpu_prompt_win(self, num)
+        return num
+      end
+    end
+    nil
+  end
+
+  def block_move(game)
+    (1..game.board.grid.flatten.length).each do |num|
+      dup_board = game.board.dup
+      next unless dup_board.valid_move?(num)
+
+      symbols = game.symbols.reject { |sym| sym == symbol }
+      symbols.each do |sym|
+        dup_board.place_symbol(num, sym)
+        if dup_board.win?(sym)
+          cpu_prompt_block(self, num)
+          return num
+        end
+      end
+    end
+    nil
+  end
+
+  def random_move(game)
+    move = game.board.valid_pos.sample
+    cpu_prompt_random_move(self, move)
+    move
+  end
+end
+
+class SuperCPU < Computer
+  def get_position(game, symbol); end
 end
