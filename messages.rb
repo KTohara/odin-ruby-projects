@@ -27,7 +27,7 @@ module Messages
 
   def prompt_cpu_player(player_num)
     system('clear')
-    print "Player ##{player_num}, are you a (h)uman or (c)omputer?#{prompt}"
+    print "Player ##{player_num}, are you a (h)uman, (c)omputer, or (s)uper computer?#{prompt}"
   end
 
   def prompt_create_name(player_num)
