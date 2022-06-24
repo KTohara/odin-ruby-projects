@@ -62,13 +62,26 @@ class Board
   end
 
   def win_diag?(symbol)
-    left_to_right = (0...grid.length).all? { |i| grid[i][i] == symbol }
+    length = grid.length
+    left_to_right = (0...length).all? { |i| grid[i][i] == symbol }
 
-    right_to_left = (0...grid.length).all? do |i|
-      j = grid.length - 1 - i
+    right_to_left = (0...length).all? do |i|
+      j = length - 1 - i
       grid[i][j] == symbol
     end
 
     left_to_right || right_to_left
+  end
+
+  def dup
+    length = grid.length
+    new_board = self.class.new(length)
+    new_board.create_board
+    (0...length).each do |i|
+      (0...length).each do |j|
+        new_board.grid[i][j] = grid[i][j]
+      end
+    end
+    new_board
   end
 end
