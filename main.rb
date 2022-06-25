@@ -3,13 +3,13 @@
 require_relative 'game'
 require_relative 'messages'
 require_relative 'display'
-
+require 'byebug'
 # TicTacToe game inputs
 class TicTacToe
   extend Display
   extend Messages
 
-  def self.play_game(replay = false, game = nil)
+  def self.play_game(replay = nil, game = nil)
     game ||= Game.new(input_board_size, setup_players(total_players, replay))
     game.play
     repeat_game(game)
@@ -30,7 +30,11 @@ class TicTacToe
 
     taken = []
     (1..total_players).inject([]) do |players, player_num|
-      player = cpu?(player_num) ? Computer.new(player_num) : Player.new(player_num, taken)
+      player = case cpu?(player_num)
+               when 'c' then Computer.new(player_num)
+               when 'h' then Player.new(player_num, taken)
+               when 's' then SuperCPU.new(player_num)
+               end
       players << player
     end
   end
@@ -47,11 +51,11 @@ class TicTacToe
 
   def self.cpu?(player_num)
     input = nil
-    until %w[h c].include?(input)
+    until %w[h c s].include?(input)
       prompt_cpu_player(player_num)
       input = gets.chomp.downcase
     end
-    input == 'c'
+    input
   end
 
   def self.repeat_game(game)
