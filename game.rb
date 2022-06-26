@@ -21,7 +21,7 @@ class Game
   def play
     setup_board
     display_lets_play
-    display_board
+    display_board(self)
     play_turns
     game_over
   end
@@ -33,21 +33,21 @@ class Game
   end
 
   def play_turns
-    until board.full?(symbols)
+    until board.over?
       num = current_player.get_position(board, symbols)
       board.place_symbol(num, current_player.symbol)
-      display_board
-      break if board.win?(current_player.symbol)
+      display_board(self)
+      break if board.over?
 
-      @current_player = switch_current_player
+      @current_player = next_player
     end
   end
 
   def game_over
-    display_board
-    if board.win?(current_player.symbol)
+    display_board(self)
+    if board.won?
       add_win(current_player)
-      display_board
+      display_board(self)
       message_winner
     else
       message_tie
@@ -58,9 +58,9 @@ class Game
     current_player.wins += 1
   end
 
-  def switch_current_player
+  def next_player
     # can't use rotate! - breaks display
     total_rotations = (players.index(current_player) + players.length + 1) % players.length
-    @current_player = players.rotate(total_rotations).first
+    players.rotate(total_rotations).first
   end
 end

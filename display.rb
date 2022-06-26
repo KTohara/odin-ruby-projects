@@ -2,7 +2,7 @@
 
 # Display functions
 module Display
-  def display_grid_array
+  def display_grid_array(board)
     max_length = (board.grid.length**2).digits.count
     grid = board.grid.map do |row|
       row.map { |num| num.to_s.rjust(max_length) }
@@ -43,12 +43,12 @@ module Display
     end
   end
 
-  def stats_display_length
+  def stats_display_length(players)
     players.map { |player| player.name.length + player.wins.to_s.length + player.symbol.length }.max + 7
   end
 
-  def display_score_array
-    score_top = "+#{'=- SCORE -='.center(stats_display_length, '-')}+"
+  def display_score_array(players)
+    score_top = "+#{'=- SCORE -='.center(stats_display_length(players), '-')}+"
     score_bottom = "+#{'-' * (score_top.length - 2)}+"
     players.each_with_object([]).with_index do |(player, acc), i|
       spaces = score_top.length - player.name.length - player.wins.digits.count - 8
@@ -58,11 +58,11 @@ module Display
     end
   end
 
-  def display_board
+  def display_board(game)
     system('clear')
     display_banner
-    scores = display_score_array
-    grid = display_grid_array
+    scores = display_score_array(game.players)
+    grid = display_grid_array(game.board)
     scores << ' ' * scores.first.length while scores.length < grid.length
     display_array = scores.zip(grid)
     display_array.each { |line| puts line.join }

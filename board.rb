@@ -19,58 +19,54 @@ class Board
   end
 
   def place_symbol(num, symbol)
-    grid.each_index do |i|
-      grid.each_index do |j|
+    (0...grid.length).each do |i|
+      (0...grid.length).each do |j|
         grid[i][j] = symbol if grid[i][j].to_i == num
       end
     end
   end
 
   def valid_move?(num)
+    return false if num.instance_of?(String)
+
     grid.flatten[(num - 1)] == num
   end
 
   def valid_pos
-    grid.flatten.select { |el| el.instance_of?(Integer) }
+    grid.flatten.select { |cell| cell.instance_of?(Integer) }
   end
 
-  def full?(symbols)
-    board_array = grid.flatten
-    board_array.all? { |cell| symbols.include?(cell) }
+  def over?
+    won? || tied?
   end
 
-  def win?(symbol)
-    win_row?(symbol) || win_col?(symbol) || win_diag?(symbol)
-  end
+  def tied?
+    return false if won?
 
-  def win_row?(symbol)
-    grid.any? do |row|
-      row.all? { |cell| cell == symbol }
+    grid.all? do |row|
+      row.all? { |cell| cell.instance_of?(String) }
     end
   end
 
-  def win_col?(symbol)
-    col = grid.map.with_index do |_, i|
-      grid.map.with_index do |_, j|
-        grid[j][i]
-      end
-    end
-
-    col.any? do |row|
-      row.all? { |cell| cell == symbol }
-    end
+  def won?
+    !winner.nil?
   end
 
-  def win_diag?(symbol)
-    length = grid.length
-    left_to_right = (0...length).all? { |i| grid[i][i] == symbol }
-
-    right_to_left = (0...length).all? do |i|
-      j = length - 1 - i
-      grid[i][j] == symbol
+  def winner
+    (grid + cols + diagonals).each do |row|
+      return row.first if row.all? { |cell| row.first == cell }
     end
+    nil
+  end
 
-    left_to_right || right_to_left
+  def cols
+    grid.transpose
+  end
+
+  def diagonals
+    diag = (0...grid.length).map { |i| grid[i][i] }
+    antediag = (0...grid.length).map { |i| grid[i][grid.length - 1 - i] }
+    [diag] + [antediag]
   end
 
   def dup

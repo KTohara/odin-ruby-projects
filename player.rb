@@ -2,6 +2,7 @@
 
 require_relative 'display'
 require_relative 'messages'
+require_relative 'ttt_node'
 
 # Player class
 class Player
@@ -16,10 +17,10 @@ class Player
     @wins = 0
   end
 
-  def get_position(game)
+  def get_position(board, _symbols)
     prompt_get_position(self)
     input = gets.chomp.to_i
-    until game.board.valid_move?(input)
+    until board.valid_move?(input)
       error_get_position(self)
       input = gets.chomp.to_i
     end
@@ -55,51 +56,44 @@ end
 class Computer
   include Messages
   include Display
+  
+  class << self
+    attr_reader :cpu_names, :cpu_symbols
+  end
+  
+  @cpu_names = ['HAL-9000', 'Data', 'Bishop', 'C3P0', 'R2D2', 'Agent Smith', 'T-800', 'T-1000', 'Wall-E']
+  @cpu_symbols = ['§', '⁂', '♠', '♣', '♥', '♦', '𝄞', '⚝', '🄋']
+
   attr_reader :name, :symbol
   attr_accessor :wins
-
-  @@cpu_names = ['HAL-9000', 'Data', 'Bishop', 'C3P0', 'R2D2', 'Agent Smith', 'T-800', 'T-1000', 'Wall-E']
-  @@cpu_symbols = ['§', '⁂', '♠', '♣', '♥', '♦', '𝄞', '⚝', '🄋']
 
   def initialize(player_num)
     @wins = 0
     create_cpu(player_num)
   end
 
-  # game.board.place_symbol(1, '§')
-  # game.board.place_symbol(4, '§')
-  # game.board.place_symbol(6, '@')
-  # game.board.place_symbol(9, '@')
-
-  def get_position(game)
+  def get_position(board, symbols)
     cpu_prompt_thinking(name, symbol)
-    win_move(game) || block_move(game) || random_move(game)
-    # input = win_move(game.board, game.symbols)
-    # cpu_prompt_win(self, input)
-    # if !block_move(game.board, game.symbols).nil?
-    #   input = block_move(game.board, game.symbols)
-    #   cpu_prompt_block(self, input)
-    # input = game.board.valid_pos.sample
-    # cpu_prompt_random_move(self, input)
+    win_move(board) || block_move(board, symbols) || random_move(board)
   end
 
   private
 
   def create_cpu(player_num)
-    @name = @@cpu_names.sample
-    @symbol = @@cpu_symbols.sample
-    @@cpu_names.delete(name)
-    @@cpu_symbols.delete(symbol)
+    @name = Computer.cpu_names.sample
+    @symbol = Computer.cpu_symbols.sample
+    Computer.cpu_names.delete(name)
+    Computer.cpu_symbols.delete(symbol)
     cpu_prompt_creation(player_num, self)
   end
 
-  def win_move(game)
-    (1..game.board.grid.flatten.length).each do |num|
-      dup_board = game.board.dup
+  def win_move(board)
+    (1..board.grid.length**2).each do |num|
+      dup_board = board.dup
       next unless dup_board.valid_move?(num)
 
       dup_board.place_symbol(num, symbol)
-      if dup_board.win?(symbol)
+      if dup_board.winner == symbol
         cpu_prompt_win(self, num)
         return num
       end
@@ -107,15 +101,15 @@ class Computer
     nil
   end
 
-  def block_move(game)
-    (1..game.board.grid.flatten.length).each do |num|
-      dup_board = game.board.dup
+  def block_move(board, symbols)
+    (1..board.grid.length**2).each do |num|
+      dup_board = board.dup
       next unless dup_board.valid_move?(num)
 
-      symbols = game.symbols.reject { |sym| sym == symbol }
+      symbols = symbols.reject { |sym| sym == symbol }
       symbols.each do |sym|
         dup_board.place_symbol(num, sym)
-        if dup_board.win?(sym)
+        if dup_board.winner == sym
           cpu_prompt_block(self, num)
           return num
         end
@@ -124,13 +118,35 @@ class Computer
     nil
   end
 
-  def random_move(game)
-    move = game.board.valid_pos.sample
+  def random_move(board)
+    move = board.valid_pos.sample
     cpu_prompt_random_move(self, move)
     move
   end
 end
 
+# CPU using DFS to calculate move
 class SuperCPU < Computer
-  def get_position(game, symbol); end
+  def get_position(board, symbols)
+    node = TicTacToeNode.new(board, symbol, symbols)
+    possible_moves = node.children.shuffle
+
+    node = possible_moves.find { |child| child.winning_node?(symbol) }
+
+    if node
+      cpu_prompt_thinking(name, symbol)
+      cpu_prompt_random_move(self, node.prev_move)
+      return node.prev_move
+    end
+
+    node = possible_moves.find { |child| !child.losing_node?(symbol) }
+
+    if node
+      cpu_prompt_thinking(name, symbol)
+      cpu_prompt_random_move(self, node.prev_move)
+      return node.prev_move
+    end
+
+    raise 'I cannot lose!'
+  end
 end
