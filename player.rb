@@ -56,11 +56,11 @@ end
 class Computer
   include Messages
   include Display
-  
+
   class << self
     attr_reader :cpu_names, :cpu_symbols
   end
-  
+
   @cpu_names = ['HAL-9000', 'Data', 'Bishop', 'C3P0', 'R2D2', 'Agent Smith', 'T-800', 'T-1000', 'Wall-E']
   @cpu_symbols = ['§', '⁂', '♠', '♣', '♥', '♦', '𝄞', '⚝', '🄋']
 

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'color'
+
 # Message prompts and errors
 module Messages
   def prompt
@@ -70,35 +72,47 @@ module Messages
   def cpu_prompt_creation(player_num, cpu)
     system('clear')
     puts "Computer ##{player_num} has chosen name and symbol: #{cpu.name} #{cpu.symbol}"
-    sleep(2.5)
+    sleep(2)
   end
 
   def cpu_prompt_thinking(name, symbol)
     puts "#{name} (#{symbol}) is thinking..."
-    sleep(1)
+    sleep(0.75)
   end
 
   def cpu_prompt_random_move(cpu, position_num)
     puts "#{cpu.name} (#{cpu.symbol}) chose position '#{position_num}'"
-    sleep(1.5)
+    sleep(1.25)
   end
 
   def cpu_prompt_block(cpu, position_num)
     puts "#{cpu.name} (#{cpu.symbol}) initiates block protocol on position '#{position_num}'"
-    sleep(1.5)
+    sleep(1.25)
   end
 
   def cpu_prompt_win(cpu, position_num)
     puts "#{cpu.name} (#{cpu.symbol}) initiates win protocol on position '#{position_num}'"
-    sleep(1.5)
+    sleep(1.25)
   end
 
   # game over
   def message_winner
-    puts "\e[1mGAME OVER!\e[22m #{current_player.name} is the winner!\n\n"
+    puts "GAME OVER! #{current_player.name} is the winner!".bold + "\n\n"
   end
 
   def message_tie
-    puts "\e[1mDRAW GAME!\e[22m\n\n"
+    puts "DRAW GAME!".bold + "\n\n"
+  end
+
+  def message_repeat_game?
+    print "Play another game? (y)es/(n)o:#{prompt}"
+  end
+
+  def message_thanks
+    puts "Thanks for Playing!".bold
+  end
+
+  def message_play_with_original_players?
+    print "Play with original players? (y)es/(n)o:#{prompt}"
   end
 end

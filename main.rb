@@ -62,13 +62,13 @@ class TicTacToe
   def self.repeat_game(game)
     input = nil
     until %w[y n].include?(input)
-      print "Play another game? (y)es/(n)o \n> "
+      message_repeat_game?
       input = gets.chomp.downcase
     end
     if input == 'y'
       play_original_players(game)
     else
-      puts "\e[1mThanks for Playing!\e[22m"
+      message_thanks
       exit 0
     end
   end
@@ -76,7 +76,7 @@ class TicTacToe
   def self.play_original_players(game)
     input = nil
     until %w[y n].include?(input)
-      print "Play with original players? (y)es/(n)o \n> "
+      message_play_with_original_players?
       input = gets.chomp.downcase
     end
     input == 'y' ? play_game(true, game) : play_game
