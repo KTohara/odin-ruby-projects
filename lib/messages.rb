@@ -97,11 +97,11 @@ module Messages
 
   # game over
   def message_winner
-    puts "GAME OVER! #{current_player.name} is the winner!".bold + "\n\n"
+    puts "#{"GAME OVER! #{current_player.name} is the winner!".bold}\n\n"
   end
 
   def message_tie
-    puts "DRAW GAME!".bold + "\n\n"
+    puts "#{'DRAW GAME!'.bold}\n\n"
   end
 
   def message_repeat_game?
@@ -109,7 +109,7 @@ module Messages
   end
 
   def message_thanks
-    puts "Thanks for Playing!".bold
+    puts 'Thanks for Playing!'.bold
   end
 
   def message_play_with_original_players?

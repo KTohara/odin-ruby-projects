@@ -19,16 +19,13 @@ class Board
   end
 
   def place_symbol(num, symbol)
-    (0...grid.length).each do |i|
-      (0...grid.length).each do |j|
-        grid[i][j] = symbol if grid[i][j].to_i == num
-      end
-    end
+    row = grid.detect { |line| line.include?(num) }
+    row_pos = grid.index(row)
+    col_pos = row.index(num)
+    grid[row_pos][col_pos] = symbol
   end
 
   def valid_move?(num)
-    return false if num.instance_of?(String)
-
     grid.flatten[(num - 1)] == num
   end
 
