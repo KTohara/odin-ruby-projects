@@ -69,9 +69,9 @@ module Messages
   end
 
   # cpu messages
-  def cpu_prompt_creation(player_num, cpu)
+  def cpu_prompt_creation(player_num, name, symbol)
     system('clear')
-    puts "Computer ##{player_num} has chosen name and symbol: #{cpu.name} #{cpu.symbol}"
+    puts "Computer ##{player_num} has chosen name and symbol: #{name} #{symbol}"
     sleep(2)
   end
 
