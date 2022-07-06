@@ -9,7 +9,7 @@ class TicTacToe
   include Display
   include Messages
 
-  attr_reader :taken, :board_size, :player_count
+  attr_reader :taken, :board_size, :player_count, :cpu_names, :cpu_symbols
 
   def initialize
     @cpu_names = ['HAL-9000', 'Data', 'Bishop', 'C3P0', 'R2D2', 'Agent Smith', 'T-800', 'T-1000', 'Wall-E']
@@ -53,11 +53,12 @@ class TicTacToe
   def setup_players
     (1..player_count).each do |player_num|
       type = player_type(player_num)
-      name, symbol = create_cpu(player_num) if %w[s c].include?(type)
-
-      name = create_name(player_num)
-      symbol = create_symbol(name)
-
+      if %w[s c].include?(type)
+        name, symbol = create_cpu(player_num) 
+      else
+        name = create_name(player_num)
+        symbol = create_symbol(name)
+      end
       players << create_player(type, name, symbol)
     end
   end
