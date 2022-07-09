@@ -1,12 +1,11 @@
 # frozen_string_literal: true
-require 'byebug'
+
 require 'player'
-# require 'board'
 
 describe Player do
   subject(:player) { described_class.new('Rhubarb', 'x') }
   let(:board) { instance_double(Board) }
-  let(:symbols) { ['x', 'o'] }
+  let(:symbols) { %w[x o] }
 
   before { allow($stdout).to receive(:write) }
 
@@ -51,7 +50,7 @@ describe Computer do
   describe '#win_move' do
     context 'when there is a winning move' do
       let(:board) { instance_double(Board, grid: [[1, 2, 3], [4, 5, '%'], [7, 8, '%']]) }
-      
+
       it 'should return a position as a number' do
         dupe = instance_double('Board', grid: [[1, 2, 3], [4, 5, '%'], [7, 8, '%']])
         allow(board).to receive(:dup).and_return(dupe)
@@ -66,7 +65,7 @@ describe Computer do
       let(:board) { instance_double(Board, grid: [[1, '@', '@'], [4, '@', '%'], [7, '@', '%']]) }
 
       it 'returns nil' do
-        dupe = instance_double('Board', grid: [[1, '@', '@'], [4, '@', '%'], [7, '@', '%']] )
+        dupe = instance_double('Board', grid: [[1, '@', '@'], [4, '@', '%'], [7, '@', '%']])
         allow(board).to receive(:dup).and_return(dupe)
         allow(dupe).to receive(:valid_move?).and_return(true, true, true)
         allow(dupe).to receive(:place_symbol)
@@ -86,7 +85,7 @@ describe Computer do
 
       it 'returns a position as a number' do
         dupe = instance_double(Board, grid: [[1, '@', '@'], ['%', 5, 6], [7, '%', 9]])
-        
+
         allow(board).to receive(:dup).and_return(dupe)
         allow(dupe).to receive(:valid_move?).and_return(true)
         allow(dupe).to receive(:place_symbol)
@@ -120,7 +119,7 @@ describe Computer do
 
     context 'when a board space has been taken' do
       let(:board) { instance_double(Board, grid: [[1, 2, 3], [4, 5, 6], [7, 8, '@']]) }
-      
+
       it 'does not return an occupied space' do
         allow(board).to receive(:valid_pos).and_return((1..8).to_a)
         expect(cpu.random_move(board)).to_not eq(9)

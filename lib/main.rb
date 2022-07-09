@@ -9,8 +9,7 @@ class TicTacToe
   include Display
   include Messages
 
-  attr_reader :taken, :board_size, :player_count, :cpu_names, :cpu_symbols
-
+  
   def initialize
     @cpu_names = ['HAL-9000', 'Data', 'Bishop', 'C3P0', 'R2D2', 'Agent Smith', 'T-800', 'T-1000', 'Wall-E']
     @cpu_symbols = ['§', '⁂', '♠', '♣', '♥', '♦', '𝄞', '⚝', '🄋']
@@ -20,8 +19,8 @@ class TicTacToe
     @players = []
     @replay = false
   end
-
-  def play_game
+  
+  def run
     input_board_size
     input_total_players
     setup_players
@@ -29,7 +28,11 @@ class TicTacToe
     game.play
     repeat_game
   end
-
+  
+  private
+  
+  attr_reader :taken, :board_size, :player_count, :cpu_names, :cpu_symbols, :players, :game
+  
   def input_board_size
     prompt_board_size
     input = gets.chomp.to_i
@@ -54,7 +57,7 @@ class TicTacToe
     (1..player_count).each do |player_num|
       type = player_type(player_num)
       if %w[s c].include?(type)
-        name, symbol = create_cpu(player_num) 
+        name, symbol = create_cpu(player_num)
       else
         name = create_name(player_num)
         symbol = create_symbol(name)
@@ -130,12 +133,8 @@ class TicTacToe
       message_play_with_original_players?
       input = gets.chomp.downcase
     end
-    input == 'y' ? game.play : play_game
+    input == 'y' ? game.play : run
   end
-
-  private
-
-  attr_reader :players, :game
 end
 
-TicTacToe.new.play_game
+TicTacToe.new.run
