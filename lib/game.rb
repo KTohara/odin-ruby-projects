@@ -14,26 +14,20 @@ class Game
   def initialize(board_size, players)
     @board = Board.new(board_size)
     @players = players
-    @symbols = players.inject([]) { |acc, player| acc << player.symbol }
+    @symbols = players.map(&:symbol)
     @current_player = @players.first
   end
 
   def play
-    setup_board
+    board.create_board
     display_lets_play
     display_board(self)
     play_turns
     game_over
   end
 
-  private
-
-  def setup_board
-    board.create_board
-  end
-
   def play_turns
-    until board.over?
+    loop do
       num = current_player.get_position(board, symbols)
       board.place_symbol(num, current_player.symbol)
       display_board(self)
@@ -53,6 +47,8 @@ class Game
       message_tie
     end
   end
+
+  private
 
   def add_win(current_player)
     current_player.wins += 1

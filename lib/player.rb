@@ -2,18 +2,19 @@
 
 require_relative 'display'
 require_relative 'messages'
-require_relative 'ttt_node'
+require_relative 'node'
 
 # Player class
 class Player
   include Display
   include Messages
+
   attr_reader :name, :symbol
   attr_accessor :wins
 
-  def initialize(player_num, taken)
-    @name = create_name(player_num, taken)
-    @symbol = create_symbol(name, taken)
+  def initialize(name, symbol)
+    @name = name
+    @symbol = symbol
     @wins = 0
   end
 
@@ -26,30 +27,6 @@ class Player
     end
     input
   end
-
-  private
-
-  def create_name(player_num, taken)
-    prompt_create_name(player_num)
-    input = gets.chomp
-    while taken.include?(input) && taken.any?
-      error_create_name(player_num, input)
-      input = gets.chomp
-    end
-    taken << input
-    input
-  end
-
-  def create_symbol(name, taken)
-    prompt_create_symbol(name)
-    input = gets.chomp
-    until input.match?(/^[^\d]$/) && !taken.include?(input)
-      error_create_symbol(name, input)
-      input = gets.chomp
-    end
-    taken << input
-    input
-  end
 end
 
 # Computer class
@@ -57,34 +34,18 @@ class Computer
   include Messages
   include Display
 
-  class << self
-    attr_reader :cpu_names, :cpu_symbols
-  end
-
-  @cpu_names = ['HAL-9000', 'Data', 'Bishop', 'C3P0', 'R2D2', 'Agent Smith', 'T-800', 'T-1000', 'Wall-E']
-  @cpu_symbols = ['§', '⁂', '♠', '♣', '♥', '♦', '𝄞', '⚝', '🄋']
-
   attr_reader :name, :symbol
   attr_accessor :wins
 
-  def initialize(player_num)
+  def initialize(name, symbol)
+    @name = name
+    @symbol = symbol
     @wins = 0
-    create_cpu(player_num)
   end
 
   def get_position(board, symbols)
     cpu_prompt_thinking(name, symbol)
     win_move(board) || block_move(board, symbols) || random_move(board)
-  end
-
-  private
-
-  def create_cpu(player_num)
-    @name = Computer.cpu_names.sample
-    @symbol = Computer.cpu_symbols.sample
-    Computer.cpu_names.delete(name)
-    Computer.cpu_symbols.delete(symbol)
-    cpu_prompt_creation(player_num, self)
   end
 
   def win_move(board)
