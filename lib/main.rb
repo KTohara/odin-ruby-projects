@@ -133,7 +133,7 @@ class TicTacToe
       message_play_with_original_players?
       input = gets.chomp.downcase
     end
-    input == 'y' ? game.play : run
+    input == 'y' ? game.play : TicTacToe.new.run
   end
 end
 

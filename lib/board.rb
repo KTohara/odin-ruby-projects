@@ -26,6 +26,8 @@ class Board
   end
 
   def valid_move?(num)
+    return unless num.instance_of?(Integer)
+
     grid.flatten[(num - 1)] == num
   end
 
