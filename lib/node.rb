@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-
+require 'byebug'
 require_relative 'board'
 
 # Tree node for SuperCPU
@@ -15,10 +15,9 @@ class TicTacToeNode
 
   def children
     children = []
-
     board.grid.flatten.each do |num|
       next unless board.valid_move?(num)
-
+      
       dup_board = board.dup
       dup_board.place_symbol(num, symbol)
       children << TicTacToeNode.new(dup_board, next_symbol, symbols, num)
