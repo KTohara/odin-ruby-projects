@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'byebug'
+
 require_relative 'board'
 
 # Tree node for SuperCPU
